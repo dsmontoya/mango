@@ -1,18 +1,9 @@
-module github.com/entropyx/mango
+module github.com/dsmontoya/mango
 
-go 1.12
+go 1.14
 
 require (
-	github.com/entropyx/tools v0.0.0-20190821201549-24af18665e91
-	github.com/go-stack/stack v1.8.0 // indirect
-	github.com/golang/snappy v0.0.1 // indirect
-	github.com/google/go-cmp v0.3.1 // indirect
-	github.com/smartystreets/goconvey v0.0.0-20190731233626-505e41936337
-	github.com/stretchr/testify v1.4.0 // indirect
-	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
-	github.com/xdg/stringprep v1.0.0 // indirect
-	go.mongodb.org/mongo-driver v1.1.4
-	golang.org/x/crypto v0.0.0-20190909091759-094676da4a83 // indirect
-	golang.org/x/sync v0.0.0-20190423024810-112230192c58 // indirect
-	golang.org/x/text v0.3.2 // indirect
+	github.com/dsmontoya/utils v0.0.0-20200727042056-bdf2f1bf4e93
+	github.com/smartystreets/goconvey v1.6.4
+	go.mongodb.org/mongo-driver v1.3.5
 )

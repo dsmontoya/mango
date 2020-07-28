@@ -1,90 +1,29 @@
 package mango
 
 import (
-	"context"
 	"reflect"
 	"strings"
 
-	"github.com/entropyx/mango/options"
-	"github.com/entropyx/tools/reflectutils"
-	"github.com/entropyx/tools/strutils"
+	"github.com/dsmontoya/utils/reflectutils"
+	"github.com/dsmontoya/utils/strutils"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	opts "go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var clientKey = &mongo.Client{}
 var keyConnection *Connection
 
-func SetContext(c context.Context, model interface{}) error {
-	doc := getDocument(model)
-	doc.Context = c
-	return nil
-}
-
-func Model(model interface{}) *Document {
-	doc := getDocument(model)
-	return doc
-}
-
-func FindOne(filter interface{}, value interface{}, ops ...*options.FindOne) error {
-	doc := getDocument(value)
-	collection := doc.collection(value)
-	// TODO: set to mongo options
-	result := collection.FindOne(doc.Context, filter, &opts.FindOneOptions{})
-	return result.Decode(value)
-}
-
-func InsertOne(value interface{}, ops ...*options.InsertOne) error {
-	doc := getDocument(value)
-	collection := doc.collection(value)
-	// TODO: set to mongo options
-	result, err := collection.InsertOne(doc.Context, toBsonDoc(value))
-	if err != nil {
-		return err
-	}
-	id := result.InsertedID.(primitive.ObjectID)
-	doc.ID = id
-	return nil
-}
-
-func UpdateOne(filter interface{}, operator *Operator, ops ...*options.Update) error {
-	var updateOptions []*opts.UpdateOptions
-	doc := getDocument(operator.Value)
-	collection := doc.collection(operator.Value)
-	for _, op := range ops {
-		updateOptions = append(updateOptions, &opts.UpdateOptions{Upsert: &op.Upsert})
-	}
-	_, err := collection.UpdateOne(doc.Context, filter, operator.apply(), updateOptions...)
-	return err
-}
-
-func DeleteOne(filter interface{}, value interface{}) error {
-	doc := getDocument(value)
-	collection := doc.collection(value)
-	_, err := collection.DeleteOne(doc.Context, filter, &opts.DeleteOptions{})
-	return err
-}
-
-func DeleteMany(filter interface{}, value interface{}) error {
-	doc := getDocument(value)
-	collection := doc.collection(value)
-	_, err := collection.DeleteMany(doc.Context, filter, &opts.DeleteOptions{})
-	return err
-}
-
-func getContextFromModel(model interface{}) context.Context {
-	doc := getDocument(model)
-	return doc.Context
-}
-
 func getCollection(i interface{}) string {
 	t := reflect.TypeOf(i)
-	split := strings.Split(t.String(), ".")
+	ts := t.String()
+	if ts == "string" {
+		return i.(string)
+	}
+	split := strings.Split(ts, ".")
 	name := split[len(split)-1]
-	snakedName := strutils.ToSnakeCase(name)
-	return snakedName
+	b := []byte(name)
+	b[0] += 'a' - 'A'
+	return string(b)
 }
 
 func arrayToBsonA(v reflect.Value) bson.A {

@@ -2,25 +2,12 @@ package mango
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
+	mongooptions "go.mongodb.org/mongo-driver/mongo/options"
 )
-
-func TestRegister(t *testing.T) {
-	Convey("Given a connection", t, func() {
-		conn := &Connection{}
-		Convey("When a document is registered", func() {
-			s := &TestStruct{A: "1", a: "2"}
-			c := context.Background()
-			conn.Register(c, s)
-
-			Convey("The document should contain the connection", func() {
-				So(s.Connection(), ShouldNotBeNil)
-			})
-		})
-	})
-}
 
 func Test_portString(t *testing.T) {
 	Convey("Given a valid port number", t, func() {
@@ -56,4 +43,42 @@ func Test_hostString(t *testing.T) {
 			})
 		})
 	})
+}
+
+func TestConnect(t *testing.T) {
+	type args struct {
+		config *Config
+	}
+	tests := []struct {
+		name         string
+		args         args
+		wantDatabase string
+		wantErr      bool
+	}{
+		{
+			"connect",
+			args{
+				&Config{
+					ClientOptions: *new(mongooptions.ClientOptions).ApplyURI(os.Getenv("MONGO_URI")),
+					Database:      "test",
+					Context:       context.Background(),
+				},
+			},
+			"test",
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			connection, err := Connect(tt.args.config)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Connect() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			err = connection.client.Ping(context.Background(), nil)
+			if err != nil {
+				t.Errorf("Unable to ping")
+			}
+		})
+	}
 }
