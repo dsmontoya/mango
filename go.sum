@@ -3,8 +3,8 @@ github.com/bitly/go-hostpool v0.0.0-20171023180738-a3a6125de932/go.mod h1:NOuUCS
 github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869/go.mod h1:Ekp36dRnpXw/yCqJaO+ZrUyxD+3VXMFFr56k5XYrpB4=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/dsmontoya/utils v0.0.0-20200727042056-bdf2f1bf4e93 h1:NU1iEK3AmYXsfwfoOp4U054Z2kKzZYizKW/S4ngrD4g=
-github.com/dsmontoya/utils v0.0.0-20200727042056-bdf2f1bf4e93/go.mod h1:8xWpO23zBeFHEJdccHBwtaEOFVlZaPMJsKv1Stca6fc=
+github.com/dsmontoya/utils v0.0.0-20200808042419-3ab680a978df h1:REzDz3fb5pQYO5618XoHFloTWuuZ4C+VD+NUVduB36I=
+github.com/dsmontoya/utils v0.0.0-20200808042419-3ab680a978df/go.mod h1:8xWpO23zBeFHEJdccHBwtaEOFVlZaPMJsKv1Stca6fc=
 github.com/go-stack/stack v1.8.0 h1:5SgMzNM5HxrEjV0ww2lTmX6E2Izsfxas4+YHWRs3Lsk=
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
 github.com/gobuffalo/attrs v0.0.0-20190224210810-a9411de4debd/go.mod h1:4duuawTqi2wkkpB4ePgWMaai6/Kc6WEz83bhFwpHzj0=

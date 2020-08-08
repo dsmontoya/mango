@@ -5,9 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"time"
 
 	"github.com/dsmontoya/mango/options"
 	"github.com/dsmontoya/utils/reflectutils"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	mongooptions "go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -127,11 +129,8 @@ func (c *Connection) InsertMany(values interface{}, opts ...*options.Insert) err
 	var insertValues []interface{}
 	n := reflectutils.Each(values, func(i int, v reflect.Value) bool {
 		vi := v.Interface()
+		setInsertValues(vi)
 		collection = c.collection(vi)
-		doc := getDocument(vi)
-		if doc != nil {
-			doc.setInsertValues()
-		}
 		insertValues = append(insertValues, vi)
 		return true
 	})
@@ -146,10 +145,7 @@ func (c *Connection) InsertMany(values interface{}, opts ...*options.Insert) err
 
 func (c *Connection) InsertOne(value interface{}, opts ...*options.Insert) error {
 	insertOneOptions := make([]*mongooptions.InsertOneOptions, len(opts))
-	doc := getDocument(value)
-	if doc != nil {
-		doc.setInsertValues()
-	}
+	setInsertValues(value)
 	collection := c.collection(value)
 	for i := 0; i < len(opts); i++ {
 		opt := opts[i]
@@ -215,6 +211,58 @@ func convertCursorType(cursorType *options.CursorType) *mongooptions.CursorType 
 		return &result
 	}
 	return nil
+}
+
+func setInsertValues(value interface{}) {
+	now := time.Now()
+	v := reflectutils.DeepValue(reflect.ValueOf(value))
+	if document := v.FieldByName("Document"); document.IsValid() {
+		doc := &Document{
+			ID: document.FieldByName("ID").Interface().(primitive.ObjectID),
+		}
+		setInsertValues(doc)
+		document.Set(reflect.Indirect(reflect.ValueOf(doc)))
+	}
+	t := v.Type()
+	n := t.NumField()
+	for i := 0; i < n; i++ {
+		sf := t.Field(i)
+		name := sf.Name
+		bsonKey := sf.Tag.Get("bson")
+		switch bsonKey {
+		case "-":
+			continue
+		case "createdAt", "updatedAt":
+			reflectutils.SetField(value, name, now)
+		case "_id":
+			setObjectID(value, name)
+		}
+	}
+}
+
+func setObjectID(value interface{}, name string) {
+	var x interface{}
+	v := reflectutils.DeepValue(reflect.ValueOf(value))
+	field := v.FieldByName(name)
+	if !field.IsValid() {
+		return
+	}
+	id := primitive.NewObjectID()
+	fieldType := field.Type().String()
+	if fieldType == "primitive.ObjectID" {
+		fieldPrimitive := field.Interface().(primitive.ObjectID)
+		if fieldPrimitive != primitive.NilObjectID {
+			return
+		}
+		x = id
+	} else if fieldType == "string" {
+		fieldString := field.Interface().(string)
+		if fieldString != "" {
+			return
+		}
+		x = id.Hex()
+	}
+	reflectutils.SetField(value, name, x)
 }
 
 func hostString(address string, port uint) string {
