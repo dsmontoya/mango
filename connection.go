@@ -125,12 +125,11 @@ func (c *Connection) FindOne(filter interface{}, value interface{}, opts ...*opt
 }
 
 func (c *Connection) InsertMany(values interface{}, opts ...*options.Insert) error {
-	var collection *mongo.Collection
 	var insertValues []interface{}
+	collection := c.collection(values)
 	n := reflectutils.Each(values, func(i int, v reflect.Value) bool {
 		vi := v.Interface()
 		setInsertValues(vi)
-		collection = c.collection(vi)
 		insertValues = append(insertValues, vi)
 		return true
 	})
