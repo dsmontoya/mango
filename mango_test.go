@@ -22,7 +22,8 @@ func Test_getCollection(t *testing.T) {
 		args args
 		want string
 	}{
-		{"given a struct", args{&TestStruct{}}, "testStruct"},
+		{"given a struct", args{&TestStruct{}}, "testStructs"},
+		{"given an array of structs", args{[]*TestStruct{}}, "testStructs"},
 		{"given a string", args{"users"}, "users"},
 	}
 	for _, tt := range tests {

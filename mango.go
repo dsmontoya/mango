@@ -6,6 +6,7 @@ import (
 
 	"github.com/dsmontoya/utils/reflectutils"
 	"github.com/dsmontoya/utils/strutils"
+	"github.com/jinzhu/inflection"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -21,7 +22,8 @@ func getCollection(i interface{}) string {
 	}
 	split := strings.Split(ts, ".")
 	name := split[len(split)-1]
-	b := []byte(name)
+	plural := inflection.Plural(name)
+	b := []byte(plural)
 	b[0] += 'a' - 'A'
 	return string(b)
 }
