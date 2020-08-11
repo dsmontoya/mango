@@ -237,6 +237,10 @@ func convertCursorType(cursorType *options.CursorType) *mongooptions.CursorType 
 func setInsertValues(value interface{}) {
 	now := time.Now()
 	v := reflectutils.DeepValue(reflect.ValueOf(value))
+	k := v.Kind()
+	if k != reflect.Struct {
+		return
+	}
 	if document := v.FieldByName("Document"); document.IsValid() {
 		doc := &Document{
 			ID: document.FieldByName("ID").Interface().(primitive.ObjectID),
