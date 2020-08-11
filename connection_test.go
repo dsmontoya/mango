@@ -190,15 +190,15 @@ func TestConnection_Aggregate(t *testing.T) {
 	}{
 		// TODO: Add test cases.
 	}
-	connection := newConnection(context.Background())
+	connection := newConnection(context.Background()).
+		Collection("aggregationTests")
 	defer connection.Disconnect()
 	ms := make([]M, 100)
 	a := strutils.Rand(10)
 	for i := 0; i < 100; i++ {
 		ms[i] = M{"a": a}
 	}
-	if err := connection.Collection("aggregationTests").
-		InsertMany(ms); err != nil {
+	if err := connection.InsertMany(ms); err != nil {
 		panic(err)
 	}
 	for _, tt := range tests {
