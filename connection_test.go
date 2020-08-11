@@ -187,8 +187,9 @@ func TestConnection_Aggregate(t *testing.T) {
 		name    string
 		args    args
 		wantErr bool
+		wantLen int
 	}{
-		// TODO: Add test cases.
+		{"sample", args{[]M{{"$sample": M{"size": 3}}}, &[]M{}, nil}, false, 3},
 	}
 	connection := newConnection(context.Background()).
 		Collection("aggregationTests")
@@ -205,6 +206,13 @@ func TestConnection_Aggregate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if err := connection.Aggregate(tt.args.pipeline, tt.args.value, tt.args.opts...); (err != nil) != tt.wantErr {
 				t.Errorf("Connection.Aggregate() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			v := *(tt.args.value.(*[]M))
+			if len(v) != tt.wantLen {
+				t.Errorf("len = %v, wantLen %v", len(v), tt.wantLen)
+			}
+			if v[0]["a"] != a {
+				t.Errorf("v[0]['a'] = %v, a %v", v[0]["a"], a)
 			}
 		})
 	}
