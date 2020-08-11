@@ -6,6 +6,11 @@ import (
 
 type CursorType int8
 
+// Aggregate represents options that can be used to configure an Aggregate operation.
+type Aggregate struct {
+	options.AggregateOptions
+}
+
 // Delete represents options that can be used to configure DeleteOne and DeleteMany operations.
 type Delete struct {
 	*options.DeleteOptions

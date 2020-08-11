@@ -7,6 +7,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/dsmontoya/mango/options"
+	"github.com/dsmontoya/utils/strutils"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	mongooptions "go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -172,4 +175,53 @@ func Test_setInsertValues_preexistentID(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestConnection_Aggregate(t *testing.T) {
+	type args struct {
+		pipeline interface{}
+		value    interface{}
+		opts     []*options.Aggregate
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	connection := newConnection(context.Background())
+	defer connection.Disconnect()
+	ms := make([]M, 100)
+	a := strutils.Rand(10)
+	for i := 0; i < 100; i++ {
+		ms[i] = M{"a": a}
+	}
+	if err := connection.Collection("aggregationTests").
+		InsertMany(ms); err != nil {
+		panic(err)
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := connection.Aggregate(tt.args.pipeline, tt.args.value, tt.args.opts...); (err != nil) != tt.wantErr {
+				t.Errorf("Connection.Aggregate() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+	if err := connection.DeleteMany(bson.M{"a": a}); err != nil {
+		panic(err)
+	}
+}
+
+func newConnection(ctx context.Context) *Connection {
+	config := &Config{
+		ClientOptions: *new(mongooptions.ClientOptions).ApplyURI(os.Getenv("MONGO_URI")),
+		Database:      "test",
+		Context:       ctx,
+	}
+	connection, err := Connect(config)
+	if err != nil {
+		panic(err)
+	}
+	return connection
 }

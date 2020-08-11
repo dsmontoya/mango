@@ -40,6 +40,24 @@ func Connect(config *Config) (*Connection, error) {
 	return connection, nil
 }
 
+func (c *Connection) Aggregate(pipeline interface{}, value interface{}, opts ...*options.Aggregate) error {
+	cursor, err := c.aggregateWithCursor(pipeline, value, opts...)
+	if err != nil {
+		return err
+	}
+	return cursor.All(c.context, value)
+}
+
+func (c *Connection) aggregateWithCursor(pipeline interface{}, value interface{}, opts ...*options.Aggregate) (*mongo.Cursor, error) {
+	collection := c.collection(value)
+	aggregateOptions := make([]*mongooptions.AggregateOptions, len(opts))
+	for i := 0; i < len(opts); i++ {
+		opt := opts[i]
+		aggregateOptions[i] = &opt.AggregateOptions
+	}
+	return collection.Aggregate(c.context, pipeline, aggregateOptions...)
+}
+
 func (c *Connection) Collection(i interface{}) *Connection {
 	c2 := c.clone()
 	c2.collectionName = getCollection(i)
@@ -72,6 +90,10 @@ func (c *Connection) DeleteMany(filter interface{}, opts ...*options.Delete) err
 	}
 	_, err := collection.DeleteMany(c.context, filter, deleteOptions...)
 	return err
+}
+
+func (c *Connection) Disconnect() error {
+	return c.client.Disconnect(c.context)
 }
 
 func (c *Connection) Find(filter interface{}, value interface{}, opts ...*options.Find) error {
