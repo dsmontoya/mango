@@ -3,6 +3,8 @@ package operators
 import (
 	"reflect"
 	"testing"
+
+	"github.com/dsmontoya/mango"
 )
 
 func TestQuery_Equal(t *testing.T) {
@@ -17,6 +19,51 @@ func TestQuery_Equal(t *testing.T) {
 			t.Errorf("Query was modified")
 		}
 	})
+}
+
+func TestQuery_In(t *testing.T) {
+	type args struct {
+		field  string
+		values []interface{}
+	}
+	tests := []struct {
+		name string
+		q    Query
+		args args
+		want Query
+	}{
+		{
+			"empty",
+			Query{},
+			args{"name", []interface{}{"John", "Diana"}},
+			Query{
+				"name": mango.M{
+					"$in": []interface{}{"John", "Diana"},
+				},
+			},
+		},
+		{
+			"non-empty",
+			Query{
+				"name": mango.M{
+					"$in": []interface{}{"John", "Peter"},
+				},
+			},
+			args{"name", []interface{}{"Diana", "Hanna"}},
+			Query{
+				"name": mango.M{
+					"$in": []interface{}{"John", "Peter", "Diana", "Hanna"},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.q.In(tt.args.field, tt.args.values...); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Query.In() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }
 
 func TestQuery_copy(t *testing.T) {
