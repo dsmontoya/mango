@@ -5,6 +5,8 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dsmontoya/utils v0.0.0-20200808042419-3ab680a978df h1:REzDz3fb5pQYO5618XoHFloTWuuZ4C+VD+NUVduB36I=
 github.com/dsmontoya/utils v0.0.0-20200808042419-3ab680a978df/go.mod h1:8xWpO23zBeFHEJdccHBwtaEOFVlZaPMJsKv1Stca6fc=
+github.com/dsmontoya/utils v0.0.0-20200813143007-e08570b69af2 h1:qQiI3m8drdxqh2wm3b7AMwlwdYfUXp6O5no3r57bdnw=
+github.com/dsmontoya/utils v0.0.0-20200813143007-e08570b69af2/go.mod h1:SHCZxikDQVy/IskOpKJ4dP7naiX1JP1aWFP7zgfxWqA=
 github.com/go-stack/stack v1.8.0 h1:5SgMzNM5HxrEjV0ww2lTmX6E2Izsfxas4+YHWRs3Lsk=
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
 github.com/gobuffalo/attrs v0.0.0-20190224210810-a9411de4debd/go.mod h1:4duuawTqi2wkkpB4ePgWMaai6/Kc6WEz83bhFwpHzj0=
