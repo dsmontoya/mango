@@ -22,6 +22,20 @@ func (p Project) Array(field string, fields ...string) Project {
 	return c
 }
 
+//Exclude specifies the exclusion of a field..
+func (p Project) Exclude(field string) Project {
+	c := p.copy()
+	c[field] = 0
+	return c
+}
+
+//Include specifies the inclusion of a field.
+func (p Project) Include(field string) Project {
+	c := p.copy()
+	c[field] = 1
+	return c
+}
+
 func (p Project) copy() Project {
 	c := Project{}
 	maputils.Copy(p, c)
