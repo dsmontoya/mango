@@ -1,6 +1,9 @@
 package stages
 
-import "github.com/dsmontoya/mango"
+import (
+	"github.com/dsmontoya/mango"
+	"github.com/dsmontoya/mango/operators"
+)
 
 type Stages []mango.M
 
@@ -10,8 +13,9 @@ func New() Stages {
 	return make(Stages, 0)
 }
 
-func (s Stages) Match() Stages {
-
+func (s Stages) Match(query operators.Query) Stages {
+	stage := mango.M{"$match": query}
+	return append(s, stage)
 }
 
 func (s Stages) Sample(size int) Stages {
