@@ -36,6 +36,13 @@ func (p Project) Include(field string) Project {
 	return c
 }
 
+//Rename modifies the name of a field.
+func (p Project) Rename(old, new string) Project {
+	c := p.copy()
+	c[new] = "$" + old
+	return c
+}
+
 func (p Project) copy() Project {
 	c := Project{}
 	maputils.Copy(p, c)

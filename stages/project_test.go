@@ -81,3 +81,25 @@ func TestProject_Include(t *testing.T) {
 		})
 	}
 }
+
+func TestProject_Rename(t *testing.T) {
+	type args struct {
+		old string
+		new string
+	}
+	tests := []struct {
+		name string
+		p    Project
+		args args
+		want Project
+	}{
+		{"rename", NewProject(), args{"old", "new"}, Project{"new": "$old"}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.p.Rename(tt.args.old, tt.args.new); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Project.Rename() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
