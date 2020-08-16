@@ -14,6 +14,9 @@ type Expression interface {
 //{ <field>: <expression1>, ... } form.
 type ExpressionObject map[string]Expression
 
+type fieldExpression string
+type varExpression string
+
 //Apply returns an expression object.
 func (e ExpressionObject) Apply() interface{} {
 	return e
@@ -28,9 +31,6 @@ func Field(name string) Expression {
 func Var(name string) Expression {
 	return varExpression(name)
 }
-
-type fieldExpression string
-type varExpression string
 
 func (f fieldExpression) Apply() interface{} {
 	return "$" + f
