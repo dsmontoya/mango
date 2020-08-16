@@ -10,6 +10,14 @@ type Expression interface {
 	Apply() interface{}
 }
 
+//ExpressionObject represents the
+//{ <field>: <expression1>, ... } form.
+type ExpressionObject map[string]Expression
+
+func (e ExpressionObject) Apply() interface{} {
+	return e
+}
+
 //Field accesses a field in the input documents.
 func Field(name string) Expression {
 	return fieldExpression(name)
