@@ -10,12 +10,6 @@ type Expression interface {
 	Apply() interface{}
 }
 
-type SysVar string
-
-func (s SysVar) Apply() interface{} {
-	return "$$" + f
-}
-
 //Field accesses a field in the input documents.
 func Field(name string) Expression {
 	return fieldExpression(name)
