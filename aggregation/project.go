@@ -1,4 +1,4 @@
-package stages
+package aggregation
 
 import (
 	"github.com/dsmontoya/mango"
