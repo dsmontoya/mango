@@ -14,6 +14,7 @@ type Expression interface {
 //{ <field>: <expression1>, ... } form.
 type ExpressionObject map[string]Expression
 
+//Apply returns an expression object.
 func (e ExpressionObject) Apply() interface{} {
 	return e
 }
