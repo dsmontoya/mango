@@ -103,3 +103,25 @@ func TestProject_Rename(t *testing.T) {
 		})
 	}
 }
+
+func TestProject_Expression(t *testing.T) {
+	type args struct {
+		field      string
+		expression Expression
+	}
+	tests := []struct {
+		name string
+		p    Project
+		args args
+		want Project
+	}{
+		{"adf", NewProject(), args{"name", Field("userName")}, Project{"name": "$userName"}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.p.Expression(tt.args.field, tt.args.expression); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Project.Expression() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

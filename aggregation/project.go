@@ -36,6 +36,14 @@ func (p Project) Include(field string) Project {
 	return c
 }
 
+//Expression adds a new field or resets the value of an
+//existing field.
+func (p Project) Expression(field string, expression Expression) Project {
+	c := p.copy()
+	c[field] = expression.Apply()
+	return c
+}
+
 //Rename modifies the name of a field.
 func (p Project) Rename(old, new string) Project {
 	c := p.copy()
