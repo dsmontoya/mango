@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/dsmontoya/mango/aggregation"
 	"github.com/dsmontoya/mango/options"
 	"github.com/dsmontoya/utils/reflectutils"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -40,16 +41,16 @@ func Connect(config *Config) (*Connection, error) {
 	return connection, nil
 }
 
-func (c *Connection) Aggregate(pipeline interface{}, value interface{}, opts ...*options.Aggregate) error {
-	cursor, err := c.aggregateWithCursor(pipeline, value, opts...)
+func (c *Connection) Aggregate(pipeline aggregation.Stages, value interface{}, opts ...*options.Aggregate) error {
+	cursor, err := c.aggregateWithCursor(pipeline, opts...)
 	if err != nil {
 		return err
 	}
 	return cursor.All(c.context, value)
 }
 
-func (c *Connection) aggregateWithCursor(pipeline interface{}, value interface{}, opts ...*options.Aggregate) (*mongo.Cursor, error) {
-	collection := c.collection(value)
+func (c *Connection) aggregateWithCursor(pipeline aggregation.Stages, opts ...*options.Aggregate) (*mongo.Cursor, error) {
+	collection := c.collection(nil)
 	aggregateOptions := make([]*mongooptions.AggregateOptions, len(opts))
 	for i := 0; i < len(opts); i++ {
 		opt := opts[i]
