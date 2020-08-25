@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/dsmontoya/mango"
+	"github.com/dsmontoya/mango/bson"
 )
 
 func TestSetUnion(t *testing.T) {
@@ -16,7 +16,7 @@ func TestSetUnion(t *testing.T) {
 		args args
 		want interface{}
 	}{
-		{"setUnion", args{[]Expression{Field("name"), Var("test")}}, mango.M{"$setUnion": []interface{}{"$name", "$$test"}}},
+		{"setUnion", args{[]Expression{Field("name"), Var("test")}}, bson.M{"$setUnion": []interface{}{"$name", "$$test"}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

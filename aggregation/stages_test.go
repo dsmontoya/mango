@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/dsmontoya/mango"
+	"github.com/dsmontoya/mango/bson"
 	"github.com/dsmontoya/mango/operators"
 )
 
@@ -54,7 +54,7 @@ func TestStages_Match(t *testing.T) {
 		args args
 		want Stages
 	}{
-		{"$in", Stages{}, args{operators.Query{}.In("name", "John")}, Stages{{"$match": operators.Query{"name": mango.M{"$in": []interface{}{"John"}}}}}},
+		{"$in", Stages{}, args{operators.Query{}.In("name", "John")}, Stages{{"$match": operators.Query{"name": bson.M{"$in": []interface{}{"John"}}}}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

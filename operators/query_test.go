@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/dsmontoya/mango"
+	"github.com/dsmontoya/mango/bson"
 )
 
 func TestQuery_Equal(t *testing.T) {
@@ -37,7 +37,7 @@ func TestQuery_In(t *testing.T) {
 			Query{},
 			args{"name", []interface{}{"John", "Diana"}},
 			Query{
-				"name": mango.M{
+				"name": bson.M{
 					"$in": []interface{}{"John", "Diana"},
 				},
 			},
@@ -45,13 +45,13 @@ func TestQuery_In(t *testing.T) {
 		{
 			"non-empty",
 			Query{
-				"name": mango.M{
+				"name": bson.M{
 					"$in": []interface{}{"John", "Peter"},
 				},
 			},
 			args{"name", []interface{}{"Diana", "Hanna"}},
 			Query{
-				"name": mango.M{
+				"name": bson.M{
 					"$in": []interface{}{"John", "Peter", "Diana", "Hanna"},
 				},
 			},

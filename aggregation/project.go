@@ -1,11 +1,11 @@
 package aggregation
 
 import (
-	"github.com/dsmontoya/mango"
+	"github.com/dsmontoya/mango/bson"
 	"github.com/dsmontoya/utils/maputils"
 )
 
-type Project mango.M
+type Project bson.M
 
 func NewProject() Project {
 	return Project{}

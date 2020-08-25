@@ -1,6 +1,6 @@
 package aggregation
 
-import "github.com/dsmontoya/mango"
+import "github.com/dsmontoya/mango/bson"
 
 const (
 	NOW = varExpression("NOW")
@@ -51,7 +51,7 @@ func SetUnion(expressions []Expression) Expression {
 			for i, expression := range expressions {
 				exps[i] = expression.Apply()
 			}
-			return mango.M{"$setUnion": exps}
+			return bson.M{"$setUnion": exps}
 		},
 	}
 }

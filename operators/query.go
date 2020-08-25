@@ -1,11 +1,11 @@
 package operators
 
 import (
-	"github.com/dsmontoya/mango"
+	"github.com/dsmontoya/mango/bson"
 	"github.com/dsmontoya/utils/maputils"
 )
 
-type Query mango.M
+type Query bson.M
 
 func (q Query) Equal(field string, value interface{}) Query {
 	c := q.copy()
@@ -20,12 +20,12 @@ func (q Query) Equal(field string, value interface{}) Query {
 func (q Query) In(field string, values ...interface{}) Query {
 	c := q.copy()
 	if _, ok := c[field]; ok {
-		m := c[field].(mango.M)
+		m := c[field].(bson.M)
 		v := m["$in"].([]interface{})
 		v = append(v, values...)
 		m["$in"] = v
 	} else {
-		c[field] = mango.M{"$in": values}
+		c[field] = bson.M{"$in": values}
 	}
 	return c
 }
