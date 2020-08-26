@@ -65,6 +65,40 @@ func TestStages_Match(t *testing.T) {
 	}
 }
 
+func TestStages_ReplaceRoot(t *testing.T) {
+	type args struct {
+		newRoot Expression
+	}
+	tests := []struct {
+		name string
+		s    Stages
+		args args
+		want Stages
+	}{
+		{
+			"replaceRoot",
+			New(),
+			args{
+				Field("name"),
+			},
+			Stages{
+				bson.M{
+					"$replaceRoot": bson.M{
+						"newRoot": "$name",
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.s.ReplaceRoot(tt.args.newRoot); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Stages.ReplaceRoot() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestStages_Unwind(t *testing.T) {
 	type args struct {
 		path                       string

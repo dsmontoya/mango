@@ -24,6 +24,13 @@ func (s Stages) Match(query operators.Query) Stages {
 	return append(s, stage)
 }
 
+func (s Stages) ReplaceRoot(newRoot Expression) Stages {
+	stage := bson.M{"$replaceRoot": bson.M{
+		"newRoot": newRoot.Apply(),
+	}}
+	return append(s, stage)
+}
+
 func (s Stages) Sample(size int) Stages {
 	stage := bson.M{"$sample": bson.M{"size": size}}
 	return append(s, stage)
