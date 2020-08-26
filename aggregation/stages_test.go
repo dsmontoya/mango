@@ -64,3 +64,35 @@ func TestStages_Match(t *testing.T) {
 		})
 	}
 }
+
+func TestStages_Unwind(t *testing.T) {
+	type args struct {
+		path                       string
+		includeArrayIndex          string
+		preserveNullAndEmptyArrays bool
+	}
+	tests := []struct {
+		name string
+		s    Stages
+		args args
+		want Stages
+	}{
+		{
+			"unwind",
+			New(),
+			args{"list", "index", true},
+			Stages{bson.M{"$unwind": bson.M{
+				"path":                       "list",
+				"includeArrayIndex":          "index",
+				"preserveNullAndEmptyArrays": true,
+			}}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.s.Unwind(tt.args.path, tt.args.includeArrayIndex, tt.args.preserveNullAndEmptyArrays); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Stages.Unwind() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

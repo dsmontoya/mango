@@ -28,3 +28,18 @@ func (s Stages) Sample(size int) Stages {
 	stage := bson.M{"$sample": bson.M{"size": size}}
 	return append(s, stage)
 }
+
+//Unwind deconstructs an array field from the input
+//documents to output a document for each element. Each
+//output document is the input document with the value of
+//the array field replaced by the element.
+func (s Stages) Unwind(path, includeArrayIndex string, preserveNullAndEmptyArrays bool) Stages {
+	stage := bson.M{
+		"$unwind": bson.M{
+			"path":                       path,
+			"includeArrayIndex":          includeArrayIndex,
+			"preserveNullAndEmptyArrays": preserveNullAndEmptyArrays,
+		},
+	}
+	return append(s, stage)
+}
