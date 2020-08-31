@@ -1,6 +1,7 @@
 package options
 
 import (
+	"github.com/dsmontoya/mango/aggregation"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -19,6 +20,7 @@ type Delete struct {
 // Find represent all possible options to the Find() function.
 type Find struct {
 	options.FindOptions
+	Projection aggregation.Project
 }
 
 //Insert represents all possible options to the InsertMany() and InsertOne() functions.
