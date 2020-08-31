@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/dsmontoya/mango/aggregation"
-	"github.com/dsmontoya/mango/bson"
 	"github.com/dsmontoya/mango/options"
 	"github.com/dsmontoya/utils/reflectutils"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -245,7 +244,7 @@ func setInsertValues(value interface{}) {
 	}
 	if document := v.FieldByName("Document"); document.IsValid() {
 		doc := &Document{
-			ID: document.FieldByName("ID").Interface().(bson.ObjectID),
+			ID: document.FieldByName("ID").Interface().(primitive.ObjectID),
 		}
 		setInsertValues(doc)
 		document.Set(reflect.Indirect(reflect.ValueOf(doc)))

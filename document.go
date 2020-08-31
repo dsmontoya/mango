@@ -3,12 +3,12 @@ package mango
 import (
 	"time"
 
-	"github.com/dsmontoya/mango/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Document struct {
-	ID        bson.ObjectID `bson:"_id" json:"id"`
-	CreatedAt time.Time     `bson:"createdAt" json:"createdAt,omitempty"`
-	UpdatedAt time.Time     `bson:"updatedAt" json:"updatedAt,omitempty"`
-	DeletedAt *time.Time    `bson:"deletedAt" json:"deletedAt,omitempty"`
+	ID        primitive.ObjectID `bson:"_id" json:"id"`
+	CreatedAt time.Time          `bson:"createdAt" json:"createdAt,omitempty"`
+	UpdatedAt time.Time          `bson:"updatedAt" json:"updatedAt,omitempty"`
+	DeletedAt *time.Time         `bson:"deletedAt" json:"deletedAt,omitempty"`
 }
