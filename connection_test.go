@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/dsmontoya/mango/aggregation"
 	"github.com/dsmontoya/mango/options"
 	"github.com/dsmontoya/utils/strutils"
 	"go.mongodb.org/mongo-driver/bson"
@@ -179,7 +180,7 @@ func Test_setInsertValues_preexistentID(t *testing.T) {
 
 func TestConnection_Aggregate(t *testing.T) {
 	type args struct {
-		pipeline interface{}
+		pipeline aggregation.Stages
 		value    interface{}
 		opts     []*options.Aggregate
 	}
@@ -189,15 +190,15 @@ func TestConnection_Aggregate(t *testing.T) {
 		wantErr bool
 		wantLen int
 	}{
-		{"sample", args{[]M{{"$sample": M{"size": 3}}}, &[]M{}, nil}, false, 3},
+		{"sample", args{aggregation.New().Sample(3), &[]bson.M{}, nil}, false, 3},
 	}
 	connection := newConnection(context.Background()).
 		Collection("aggregationTests")
 	defer connection.Disconnect()
-	ms := make([]M, 100)
+	ms := make([]bson.M, 100)
 	a := strutils.Rand(10)
 	for i := 0; i < 100; i++ {
-		ms[i] = M{"a": a}
+		ms[i] = bson.M{"a": a}
 	}
 	if err := connection.InsertMany(ms); err != nil {
 		panic(err)
@@ -207,7 +208,7 @@ func TestConnection_Aggregate(t *testing.T) {
 			if err := connection.Aggregate(tt.args.pipeline, tt.args.value, tt.args.opts...); (err != nil) != tt.wantErr {
 				t.Errorf("Connection.Aggregate() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			v := *(tt.args.value.(*[]M))
+			v := *(tt.args.value.(*[]bson.M))
 			if len(v) != tt.wantLen {
 				t.Errorf("len = %v, wantLen %v", len(v), tt.wantLen)
 			}
